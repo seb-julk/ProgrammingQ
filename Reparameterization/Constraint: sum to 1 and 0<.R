@@ -3,7 +3,9 @@
 #     omega > 0
 #     sum(alpha_p) = 1
 #     mu is unconstraint
+# If it must sum to 5 e.g. then we multiply with 5 in the respective line (here 22) in FromTilde 
 
+# NOTE: we do not use ToTilde here as we insert the inverted parameters below.
 # First we must convert the initial parameters. Note: as alpha must sum to 1 then the invers will be same in this case
 mu <- 0
 init <- mean(vData^2)
