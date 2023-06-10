@@ -32,7 +32,7 @@ ToTilde <- function(vPar){
     dAlpha_2_tilde <- LogConstraint_inv(dAlpha_2, dUpper - dAlpha_1, dLow) # We define alpha2_tilde to be between 0,1-alpha1_tilde
         # This iteration can easily be extended to include more parameters and new boundaries as well.
         # But if the parameters are free (not be between values, then use "sum to 1..."
-    dV_tilde  <- log(dV + 2)  # We define that dV must be positive and above 2
+    dV_tilde  <- log(dV - 2)  # We define that dV must be positive and above 2
     
     vPar_tilde <- c(dAlpha_1_tilde, dAlpha_2_tilde, dV_tilde)
     return(vPar_tilde)
