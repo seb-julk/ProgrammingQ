@@ -9,12 +9,12 @@
 
 
 # Defining two functions that takes the input and use them for reparameterization as we can rescale them with dUpper and dLow
-LogConstraint_inv <- function(dX, dUpper = 1-1e-4, dLow = 1e-4){
+Constraint_inv <- function(dX, dUpper = 1-1e-4, dLow = 1e-4){
     dOut <- log((dX - dLow)/(dUpper - dX))
     return(dOut)
 }
 
-LogConstraint <- function(dX, dUpper = 1-1e-4, dLow = 1e-4){
+Constraint <- function(dX, dUpper = 1-1e-4, dLow = 1e-4){
     dOut <- dLow + (dUpper - dLow)/(1 + exp(-dX))
     return(dOut)
 }
@@ -29,10 +29,10 @@ ToTilde <- function(vPar){
     dAlpha_2 <- vPar[2]
     dBeta <- vPar[3]
     
-    dAlpha_1_tilde <- LogConstraint_inv(dAlpha_1, dUpper, dLow) # We define alpha1_tilde to be between 0,1
-    dAlpha_2_tilde <- LogConstraint_inv(dAlpha_2, dUpper - dAlpha_1, dLow) # We define alpha2_tilde to be between 0,1-alpha1_tilde
+    dAlpha_1_tilde <- Constraint_inv(dAlpha_1, dUpper, dLow) # We define alpha1_tilde to be between 0,1
+    dAlpha_2_tilde <- Constraint_inv(dAlpha_2, dUpper - dAlpha_1, dLow) # We define alpha2_tilde to be between 0,1-alpha1_tilde
     # As the bounds remain the same we use dAlpha_1 in the boundary and NOT tilde!
-    dBeta_tilde <- LogConstraint_inv(dAlpha_2, dUpper - dAlpha_1 - dAlpha_2, dLow) # follow the intuition above
+    dBeta_tilde <- Constraint_inv(dAlpha_2, dUpper - dAlpha_1 - dAlpha_2, dLow) # follow the intuition above
     # This insures that the parameters sum < 1 and not exact 1
     
     vPar_tilde <- c(dAlpha_1_tilde, dAlpha_2_tilde, dBeta_tilde)
@@ -49,9 +49,9 @@ FromTilde <- function(vPar_tilde){
     dAlpha_2_tilde <- vPar_tilde[2]
     dbeta_tilde  <- vPar_tilde[3]
     
-    dAlpha_1 <- LogConstraint(dAlpha_1_tilde, dUpper, dLow) # now we use the LogConstraint which is the exponential reparamerization
-    dAlpha_2 <- LogConstraint(dAlpha_2_tilde, dUpper - dAlpha_1, dLow) # We subtract agian. Remember that this should extended if we include more parameters
-    dBeta_tilde <- LogConstraint_inv(dAlpha_2, dUpper - dAlpha_1 - dAlpha_2, dLow) # follow the intuition above
+    dAlpha_1 <- Constraint(dAlpha_1_tilde, dUpper, dLow) # now we use the LogConstraint which is the exponential reparamerization
+    dAlpha_2 <- Constraint(dAlpha_2_tilde, dUpper - dAlpha_1, dLow) # We subtract agian. Remember that this should extended if we include more parameters
+    dBeta_tilde <- Constraint_inv(dAlpha_2, dUpper - dAlpha_1 - dAlpha_2, dLow) # follow the intuition above
     
     vPar <- c(dAlpha_1, dAlpha_2, dBeta)
     return(vPar)
