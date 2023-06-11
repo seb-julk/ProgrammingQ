@@ -1,4 +1,4 @@
-# Code is following practice exam 1
+# Code is following practice exam 1 and further is shown the handed solution to the reparameterization
 # Here we have the following constraints:
 #     omega > 0
 #     sum(alpha_p) = 1
@@ -28,3 +28,18 @@ FromTilde <- function(vPar){
 # When we then write our likelihood function we must insert our vPar with initial parameters
 # Inside the function we are then using the function FromTilde to convert the parameters.
 # NOTE: remember to use the FromTilde again if we must provide the reparameterized values
+
+# following code matches FromTilde
+reparametrize <- function(vPar){
+  dMu <- vPar[1] # no transformation
+  dOmega <- exp(vPar[2]) # makes it >0
+  vAlpha <- vPar[3:length(vPar)] / sum(vPar[3:length(vPar)]) # makes them add up to 1
+  return(c(dMu, dOmega, vAlpha))
+}
+
+# the parameters are constraint invers as follows:
+dMu=0
+dOmega=log(mean(vData^2))
+vAlpha=c(0.7, 0.3)
+vPar=c(dMu, dOmega, vAlpha)
+reparametrize(vPar)  # checking if the starting values match what we want
