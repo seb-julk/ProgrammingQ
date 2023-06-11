@@ -1,4 +1,5 @@
 # We start by defining the functions that allows us to invert the input and then reparameterize them
+# OBS, note that further below we have the handed solution to the reparameterization for a different approach
 # We have the constraints in the example that needs to be adjusted accordingly:
 #   0 < alpha_1 < 1
 #   0 < alpha_2 < 1
@@ -72,7 +73,15 @@ optimize <- optim(ToTilde(theta), LLK_r, vData = vData, method = "BFGS") # Note 
 
 FromTilde(optimize$par) # to get the reparameterized values we use the FromTilde
 
-
+# Different approach
+# This mathces FromTilde BUT the ToTilde is difficult here as we need the invers. Best suggestion is to follow above
+reparametrize <- function(vPar_plus_df){
+  vPar_rep <- rep(0, 4)
+  vPar_rep[1:3] <- exp(vPar_plus_df[1:3]) / (1 + exp(vPar_plus_df[1:3])) # constrains alphas and beta between 0 and 1
+  vPar_rep[1:3] <- vPar_rep[1:3]/sum(vPar_rep[1:3]) # makes them add up to 1
+  vPar_rep[4] <- 2 + exp(vPar_plus_df[4]) # makes v bigger than 2
+  return(vPar_rep)
+}
 
 
 
